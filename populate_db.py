@@ -16,8 +16,6 @@ if __name__ == "__main__":
     new_fiches_list = extract_fiches(new_fiches_dict)
     with open(os.path.join(root_folder, "old_fiches.json"), "w") as f:
         f.write(json.dumps(new_fiches_list))
-
-    transform_fiches((fiche for fiche in new_fiches_list))
     print("\n\n")
     print("Populating Database...")
     insert_in_db(new_fiches_list)
