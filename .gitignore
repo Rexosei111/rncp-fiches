@@ -168,3 +168,4 @@ setup.cfg
 nohup.out
 *.rest
 test.py
+*.pem

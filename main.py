@@ -171,4 +171,5 @@ if __name__ == "__main__":
     changes = get_fiches_changes(new_fiches_list, old_fiches_list)
 
     if len(changes) > 0:
+        print("\nUpdating db data...")
         update_db_data(changes)
