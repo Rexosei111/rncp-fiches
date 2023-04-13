@@ -1,0 +1,7 @@
+alive_progress
+sqlalchemy
+pymysql
+beautifulsoup4
+requests
+pydantic
+python-dotenv
