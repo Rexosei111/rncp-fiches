@@ -133,7 +133,6 @@ def insert_in_db(final_dict):
             extract_new_RNCP(fiche)
 
             session = Session()
-            # print(index, fiche["ID_FICHE"])
             new_fiche = Fiches(
                 id_externe_fiche=fiche["ID_FICHE"],
                 numero_RNCP=fiche.get("NUMERO_FICHE", None),
