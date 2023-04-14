@@ -254,7 +254,7 @@ def update_db_data(final_dict):
                                 # prerequis_validation_bloc=bloc.get(
                                 #     "PREREQUIS_VALIDATION_BLOC", None
                                 # ),
-                                fiche=updated_fiche_id,
+                                fiche=updated_fiche,
                             )
 
                             session.add(new_bloc_competences)
