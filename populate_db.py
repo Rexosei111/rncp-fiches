@@ -22,5 +22,5 @@ if __name__ == "__main__":
         f.write(json.dumps(new_fiches_list))
     print("\n\n")
     print("Populating Database...")
-    insert_in_db(new_fiches_list[510:])
+    insert_in_db(new_fiches_list)
     print("\nDatabase Population completed")
