@@ -6,13 +6,14 @@ import requests
 from bs4 import BeautifulSoup
 from config import BASE_URL
 from config import DL_BASE_URL
+from alive_progress import alive_bar
 
 
 def get_download_link():
     try:
         response = requests.get(BASE_URL)
     except:
-        return Exception("Unable to get download link")
+        raise Exception("Unable to get download link")
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
@@ -31,11 +32,13 @@ def download_file(url, file_path=os.getcwd() + "data.zip"):
     print("Downloading latest file...")
     try:
         response = requests.get(url, stream=True)
+
     except:
         raise Exception("Unable to download latest file")
     try:
         with open(file_path, "wb") as f:
             shutil.copyfileobj(response.raw, f)
+
     except:
         raise Exception("Unable to write to file")
 

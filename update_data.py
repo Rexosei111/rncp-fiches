@@ -248,12 +248,6 @@ def update_db_data(final_dict):
                                 modalites_evaluation=bloc.get(
                                     "MODALITES_EVALUATION", None
                                 ),
-                                # prerequis_entree_formation_bloc=bloc.get(
-                                #     "PREREQUIS_ENTREE_FORMATION_BLOC", None
-                                # ),
-                                # prerequis_validation_bloc=bloc.get(
-                                #     "PREREQUIS_VALIDATION_BLOC", None
-                                # ),
                                 fiche=updated_fiche,
                             )
 
@@ -344,22 +338,20 @@ def update_db_data(final_dict):
                             siret_partenaire = partenaire.get(
                                 "SIRET_PARTENAIRE", "Inconnu"
                             )
-                            siret_exists = session.query(Partenaires).filter(
-                                Partenaires.siret_partenaire == siret_partenaire
+                            siret_exists = session.query(Organismes).filter(
+                                Organismes.siret_organismes == siret_partenaire
                             )
+
                             if not siret_exists.count() > 0:
-                                new_partenaire = Partenaires(
-                                    siret_partenaire=siret_partenaire,
-                                    nom_partenaire=partenaire.get(
+                                new_organismes = Organismes(
+                                    siret_organismes=siret_partenaire,
+                                    nom_organismes=partenaire.get(
                                         "NOM_PARTENAIRE", None
                                     ),
                                 )
 
-                                session.add(new_partenaire)
-
+                                session.add(new_organismes)
                             else:
-                                new_partenaire = siret_exists.first()
-
                                 siret_exists.update(
                                     remove_none(
                                         {
@@ -371,15 +363,17 @@ def update_db_data(final_dict):
                                     )
                                 )
 
+                            new_organismes = siret_exists.first()
+
                             fiches_part = session.query(FichesPartenaires).filter(
                                 FichesPartenaires.fiche_id == updated_fiche_id,
-                                FichesPartenaires.partenaire_id == new_partenaire.id,
+                                FichesPartenaires.organismes_id == new_organismes.id,
                             )
 
                             if not fiches_part.count() > 0:
                                 new_fiche_partenaire = FichesPartenaires(
                                     fiche=updated_fiche,
-                                    partenaire=new_partenaire,
+                                    organismes=new_organismes,
                                     habilitation_partenaire=partenaire.get(
                                         "HABILITATION_PARTENAIRE", None
                                     ),
@@ -420,21 +414,20 @@ def update_db_data(final_dict):
                             siret_certificateur = certificateur.get(
                                 "SIRET_CERTIFICATEUR", "Inconnu"
                             )
-                            siret_exists = session.query(Certificateurs).filter(
-                                Certificateurs.siret_certificateur
-                                == siret_certificateur
+                            siret_exists = session.query(Organismes).filter(
+                                Organismes.siret_organismes == siret_certificateur
                             )
 
                             if not siret_exists.count() > 0:
-                                new_certificateur = Certificateurs(
-                                    siret_certificateur=siret_certificateur,
-                                    nom_certificateur=certificateur.get(
+                                new_organismes = Organismes(
+                                    siret_organismes=siret_certificateur,
+                                    nom_organismes=certificateur.get(
                                         "NOM_CERTIFICATEUR", None
                                     ),
                                 )
-                                session.add(new_certificateur)
+                                session.add(new_organismes)
                                 new_fiche_certificateur = FichesCertificateurs(
-                                    fiche=updated_fiche, certificateur=new_certificateur
+                                    fiche=updated_fiche, organismes=new_organismes
                                 )
 
                                 session.add(new_fiche_certificateur)
@@ -454,26 +447,25 @@ def update_db_data(final_dict):
                         siret_certificateur = fiche["CERTIFICATEURS"][
                             "CERTIFICATEUR"
                         ].get("SIRET_CERTIFICATEUR", "Inconnu")
-                        siret_exists = session.query(Certificateurs).filter(
-                            Certificateurs.siret_certificateur == siret_certificateur
+                        siret_exists = session.query(Organismes).filter(
+                            Organismes.siret_organismes == siret_certificateur
                         )
-
                         if not siret_exists.count() > 0:
-                            new_certificateur = Certificateurs(
-                                siret_certificateur=siret_certificateur,
-                                nom_certificateur=fiche["CERTIFICATEURS"][
+                            new_organismes = Organismes(
+                                siret_organismes=siret_certificateur,
+                                nom_organismes=fiche["CERTIFICATEURS"][
                                     "CERTIFICATEUR"
                                 ].get("NOM_CERTIFICATEUR", None),
                             )
-                            session.add(new_certificateur)
+                            session.add(new_organismes)
                             new_fiche_certificateur = FichesCertificateurs(
-                                fiche=updated_fiche, certificateur=new_certificateur
+                                fiche=updated_fiche, organismes=new_organismes
                             )
 
                             session.add(new_fiche_certificateur)
 
                         else:
-                            new_certificateur = siret_exists.update(
+                            siret_exists.update(
                                 remove_none(
                                     {
                                         "nom_certificateur": fiche["CERTIFICATEURS"][

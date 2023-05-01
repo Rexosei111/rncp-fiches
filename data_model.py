@@ -215,27 +215,43 @@ class StatistiquesPromotion(Base):
     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
-class Partenaires(Base):
-    __tablename__ = "partenaires"
+# class Partenaires(Base):
+#     __tablename__ = "partenaires"
+#     id = Column(Integer, primary_key=True)
+#     siret_partenaire = Column(String(14))
+#     nom_partenaire = Column(String(200))
+#     # I deleted here
+#     fiches_partenaires = relationship(
+#         "FichesPartenaires", back_populates="partenaire", lazy="selectin"
+#     )
+
+#     createdAt = Column(DateTime, default=datetime.utcnow)
+#     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+# class Certificateurs(Base):
+#     __tablename__ = "certificateurs"
+#     id = Column(Integer, primary_key=True)
+#     siret_certificateur = Column(String(14))
+#     nom_certificateur = Column(String(300))
+#     fiches_certificateurs = relationship(
+#         "FichesCertificateurs", back_populates="certificateur", lazy="selectin"
+#     )
+
+#     createdAt = Column(DateTime, default=datetime.utcnow)
+#     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class Organismes(Base):
+    __tablename__ = "organismes"
     id = Column(Integer, primary_key=True)
-    siret_partenaire = Column(String(14))
-    nom_partenaire = Column(String(200))
-    # I deleted here
-    fiches_partenaires = relationship(
-        "FichesPartenaires", back_populates="partenaire", lazy="selectin"
-    )
-
-    createdAt = Column(DateTime, default=datetime.utcnow)
-    updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-
-class Certificateurs(Base):
-    __tablename__ = "certificateurs"
-    id = Column(Integer, primary_key=True)
-    siret_certificateur = Column(String(14))
-    nom_certificateur = Column(String(300))
+    siret_organismes = Column(String(20))
+    nom_organismes = Column(String(400))
     fiches_certificateurs = relationship(
-        "FichesCertificateurs", back_populates="certificateur", lazy="selectin"
+        "FichesCertificateurs", back_populates="organismes", lazy="selectin"
+    )
+    fiches_partenaires = relationship(
+        "FichesPartenaires", back_populates="organismes", lazy="selectin"
     )
 
     createdAt = Column(DateTime, default=datetime.utcnow)
@@ -309,7 +325,7 @@ class FichesPartenaires(Base):
     __tablename__ = "fiches_partenaires"
     id = Column(Integer, primary_key=True)
     fiche_id = Column(Integer, ForeignKey("fiches.id"))
-    partenaire_id = Column(Integer, ForeignKey("partenaires.id"))
+    organismes_id = Column(Integer, ForeignKey("organismes.id"))
 
     # I made the changes here
     habilitation_partenaire = Column(String(22))
@@ -318,8 +334,8 @@ class FichesPartenaires(Base):
     date_derniere_modification_etat = Column(DateFormat)
 
     fiche = relationship("Fiches", back_populates="fiches_partenaires", lazy="selectin")
-    partenaire = relationship(
-        "Partenaires", back_populates="fiches_partenaires", lazy="selectin"
+    organismes = relationship(
+        "Organismes", back_populates="fiches_partenaires", lazy="selectin"
     )
 
     createdAt = Column(DateTime, default=datetime.utcnow)
@@ -330,12 +346,12 @@ class FichesCertificateurs(Base):
     __tablename__ = "fiches_certificateurs"
     id = Column(Integer, primary_key=True)
     fiche_id = Column(Integer, ForeignKey("fiches.id"))
-    certificateur_id = Column(Integer, ForeignKey("certificateurs.id"))
+    organismes_id = Column(Integer, ForeignKey("organismes.id"))
     fiche = relationship(
         "Fiches", back_populates="fiches_certificateurs", lazy="selectin"
     )
-    certificateur = relationship(
-        "Certificateurs", back_populates="fiches_certificateurs", lazy="selectin"
+    organismes = relationship(
+        "Organismes", back_populates="fiches_certificateurs", lazy="selectin"
     )
 
     createdAt = Column(DateTime, default=datetime.utcnow)
