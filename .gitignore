@@ -169,3 +169,5 @@ nohup.out
 *.rest
 test.py
 *.pem
+*.xml
+*.json

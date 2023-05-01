@@ -63,6 +63,7 @@ def extract_titles(dictionary, key):
                 titles = [
                     remove_html_tags(sub_dict["TITRE"])
                     for sub_dict in dictionary[key]["PUBLICATION_JO"]
+                    if sub_dict is not None
                 ]
                 separator = ", "
                 titles = separator.join(titles)
@@ -298,29 +299,27 @@ def insert_in_db(final_dict):
                                 "SIRET_PARTENAIRE", "Inconnu"
                             )
                             siret_exists = (
-                                session.query(Partenaires)
-                                .filter(
-                                    Partenaires.siret_partenaire == siret_partenaire
-                                )
+                                session.query(Organismes)
+                                .filter(Organismes.siret_organismes == siret_partenaire)
                                 .count()
                                 > 0
                             )
 
                             if not siret_exists:
-                                new_partenaire = Partenaires(
-                                    siret_partenaire=siret_partenaire,
-                                    nom_partenaire=partenaire.get(
+                                new_organismes = Organismes(
+                                    siret_organismes=siret_partenaire,
+                                    nom_organismes=partenaire.get(
                                         "NOM_PARTENAIRE", None
                                     ),
                                 )
 
-                                session.add(new_partenaire)
+                                session.add(new_organismes)
 
                             else:
-                                new_partenaire = (
-                                    session.query(Partenaires)
+                                new_organismes = (
+                                    session.query(Organismes)
                                     .filter(
-                                        Partenaires.siret_partenaire == siret_partenaire
+                                        Organismes.siret_organismes == siret_partenaire
                                     )
                                     .first()
                                 )
@@ -342,7 +341,7 @@ def insert_in_db(final_dict):
 
                             new_fiche_partenaire = FichesPartenaires(
                                 fiche=new_fiche,
-                                partenaire=new_partenaire,
+                                organismes=new_organismes,
                                 habilitation_partenaire=partenaire.get(
                                     "HABILITATION_PARTENAIRE", None
                                 ),
@@ -364,36 +363,35 @@ def insert_in_db(final_dict):
                                 "SIRET_CERTIFICATEUR", "Inconnu"
                             )
                             siret_exists = (
-                                session.query(Certificateurs)
+                                session.query(Organismes)
                                 .filter(
-                                    Certificateurs.siret_certificateur
-                                    == siret_certificateur
+                                    Organismes.siret_organismes == siret_certificateur
                                 )
                                 .count()
                                 > 0
                             )
 
                             if not siret_exists:
-                                new_certificateur = Certificateurs(
-                                    siret_certificateur=siret_certificateur,
-                                    nom_certificateur=certificateur.get(
+                                new_organismes = Organismes(
+                                    siret_organismes=siret_certificateur,
+                                    nom_organismes=certificateur.get(
                                         "NOM_CERTIFICATEUR", None
                                     ),
                                 )
-                                session.add(new_certificateur)
+                                session.add(new_organismes)
 
                             else:
-                                new_certificateur = (
-                                    session.query(Certificateurs)
+                                new_organismes = (
+                                    session.query(Organismes)
                                     .filter(
-                                        Certificateurs.siret_certificateur
+                                        Organismes.siret_organismes
                                         == siret_certificateur
                                     )
                                     .first()
                                 )
 
                             new_fiche_certificateur = FichesCertificateurs(
-                                fiche=new_fiche, certificateur=new_certificateur
+                                fiche=new_fiche, organismes=new_organismes
                             )
 
                             session.add(new_fiche_certificateur)
@@ -402,36 +400,32 @@ def insert_in_db(final_dict):
                             "CERTIFICATEUR"
                         ].get("SIRET_CERTIFICATEUR", "Inconnu")
                         siret_exists = (
-                            session.query(Certificateurs)
-                            .filter(
-                                Certificateurs.siret_certificateur
-                                == siret_certificateur
-                            )
+                            session.query(Organismes)
+                            .filter(Organismes.siret_organismes == siret_certificateur)
                             .count()
                             > 0
                         )
 
                         if not siret_exists:
-                            new_certificateur = Certificateurs(
-                                siret_certificateur=siret_certificateur,
-                                nom_certificateur=fiche["CERTIFICATEURS"][
+                            new_organismes = Organismes(
+                                siret_organismes=siret_certificateur,
+                                nom_organismes=fiche["CERTIFICATEURS"][
                                     "CERTIFICATEUR"
                                 ].get("NOM_CERTIFICATEUR", None),
                             )
-                            session.add(new_certificateur)
+                            session.add(new_organismes)
 
                         else:
-                            new_certificateur = (
-                                session.query(Certificateurs)
+                            new_organismes = (
+                                session.query(Organismes)
                                 .filter(
-                                    Certificateurs.siret_certificateur
-                                    == siret_certificateur
+                                    Organismes.siret_organismes == siret_certificateur
                                 )
                                 .first()
                             )
 
                         new_fiche_certificateur = FichesCertificateurs(
-                            fiche=new_fiche, certificateur=new_certificateur
+                            fiche=new_fiche, organismes=new_organismes
                         )
 
                         session.add(new_fiche_certificateur)
